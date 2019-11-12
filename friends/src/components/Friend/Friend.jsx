@@ -9,33 +9,46 @@ import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles({
   card: {
     width: "100%",
+    backgroundColor: "rgb(51,51,51)",
+    color: "#ccc",
     boxSizing: "border-box",
   },
   title: {
-    fontSize: 14,
+    fontSize: 26,
+    fontWeight: "800",
   },
   pos: {
     marginBottom: 12,
   },
+  buttonTextColor: {
+      color: "#eee",
+  }
 });
 
-const Friend = ({name, email, age}) => {
+const Friend = ({name, email, age, handleRemove, id}) => {
     const classes = useStyles();
+
+    
     return (  
         <Card className={classes.card}>
         <CardContent>
-          <Typography variant="h5" component="h2">
+          <Typography className={classes.title} variant="h5" component="h2">
             {name}
           </Typography>
-          <Typography className={classes.pos} color="textSecondary">
+          <Typography className={classes.pos} >
             {email}
           </Typography>
-          <Typography className={classes.pos} color="textSecondary">
+          <Typography className={classes.pos} >
             Age: {age}
           </Typography>
         </CardContent>
         <CardActions>
-          <Button fullWidth size="medium">Remove</Button>
+          <Button 
+          onClick={() => handleRemove(id)}
+          classes={{
+              label: classes.buttonTextColor,
+          }}
+          fullWidth size="medium">Remove</Button>
         </CardActions>
       </Card>
       );

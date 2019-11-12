@@ -2,8 +2,7 @@ import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import axios from "axios";
-import {useHistory} from "react-router-dom";
+import {axiosWithAuth} from "../../axiosAuth";
 
 
 const useStyles = makeStyles(theme => ({
@@ -36,12 +35,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const LoginForm = () => {
+const FriendForm = ({handleFriends}) => {
     const [credentials, setCredentials] = useState( {
-        username: "", 
-        password: ""
+        name: "", 
+        age: "",
+        email: "",
+        id: '',
     });
-    const history = useHistory();
     const classes = useStyles();
 
     const handleChanges = e => {
@@ -50,31 +50,38 @@ const LoginForm = () => {
             [e.target.name]: e.target.value,
         })
     }
+
+    const handleIDInput = e => {
+        setCredentials({
+            ...credentials, 
+            [e.target.name]: parseInt(e.target.value),
+        })
+    }
     
     const handleSubmit = e => {
         e.preventDefault();
-        console.log("Credentials: ", credentials);
-        axios.post("http://localhost:5000/api/login", credentials)
+        console.log("Adding Friend: ", credentials);
+        axiosWithAuth().post("/api/friends", credentials)
         .then(res => {
-            console.log(res)
-            localStorage.setItem("token",res.data.payload);
-            history.push("/");
+            console.log("Added friend response: ",res);
+            handleFriends(res.data);
         })
         .catch(err => console.log(err));
         
+        
     }    
     return (  <div className={classes.formContainer}><form onSubmit={handleSubmit} className={classes.container} noValidate autoComplete="off">
-    <h1 className={classes.title}>Log In</h1>
+    <h1 className={classes.title}>Add Friend</h1>
     <div>
       <TextField
         id="outlined-basic"
         className={classes.textField}
-        label="Username"
+        label="Name"
         margin="normal"
-        name="username"
+        name="name"
         value={credentials.username}
         color="secondary"
-        placeholder="Username"
+        placeholder="name"
         variant="outlined"
         onChange={handleChanges}
         InputProps={{
@@ -86,15 +93,51 @@ const LoginForm = () => {
       />
       <TextField
         id="outlined-basic"
-        name="password"
-        type="password"
         className={classes.textField}
-        label="Password"
+        label="Age"
         margin="normal"
+        name="age"
+        value={credentials.username}
+        color="secondary"
+        placeholder="Age"
+        variant="outlined"
         onChange={handleChanges}
+        InputProps={{
+            className: classes.input
+          }}
+          InputLabelProps={{
+            className: classes.input
+          }}
+      />
+      <TextField
+        id="outlined-basic"
+        className={classes.textField}
+        label="Email"
+        margin="normal"
+        name="email"
+        value={credentials.username}
+        color="secondary"
+        placeholder="Email"
+        variant="outlined"
+        onChange={handleChanges}
+        InputProps={{
+            className: classes.input
+          }}
+          InputLabelProps={{
+            className: classes.input
+          }}
+      />
+      <TextField
+        id="outlined-basic"
+        name="id"
+        className={classes.textField}
+        label="ID"
+        margin="normal"
+        type="number"
+        onChange={handleIDInput}
         value={credentials.password}
         color="secondary"
-        placeholder="Password"
+        placeholder="ID"
         variant="outlined"
         InputProps={{
             className: classes.input
@@ -106,9 +149,9 @@ const LoginForm = () => {
       
     </div>
     <Button type="submit" variant="contained" className={classes.button}>
-        Login
+        Add Friend
       </Button>
   </form></div>);
 }
  
-export default LoginForm;
+export default FriendForm;

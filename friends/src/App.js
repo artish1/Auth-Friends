@@ -1,6 +1,5 @@
 import React from 'react';
-import {Route, Redirect} from "react-router-dom";
-import axios from "axios";
+import {Route} from "react-router-dom";
 import './App.css';
 import LoginForm from './components/LoginForm/LoginForm';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
@@ -18,6 +17,7 @@ function App() {
         <h1>Welcome</h1>
       </PrivateRoute>
       <PrivateRoute path="/friends">
+        <h1 className="friends-title">Friends:</h1>
         <FriendsList />
       </PrivateRoute>
     </div>

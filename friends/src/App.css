@@ -9,6 +9,10 @@ body {
   height: 40vmin;
 }
 
+.friends-title {
+  color: #ddd;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

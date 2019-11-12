@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { axiosWithAuth } from "../../axiosAuth";
 import Friend from '../Friend/Friend';
 import { makeStyles } from '@material-ui/core/styles';
+import FriendForm from '../FriendForm/FriendForm';
 
 const useStyles = makeStyles({
     container: {
@@ -15,6 +16,11 @@ const useStyles = makeStyles({
 const FriendsList = () => {
     const [friends, setFriends] = useState([]);
     const classes = useStyles();
+    const handleRemove = (id) => {
+        axiosWithAuth().delete(`/api/friends/${id}`)
+        .then(res => setFriends(res.data))
+        .catch(err => console.log(err));
+    }
     useEffect(() => {
         axiosWithAuth().get("/api/friends")
         .then(res => {
@@ -23,12 +29,15 @@ const FriendsList = () => {
         })
         .catch(err => console.log(err));
     }, [])
-    return ( 
-    <div className={classes.container}>
+    return ( <div>
+        <FriendForm handleFriends={setFriends}/>
+        <div className={classes.container}>
         {friends.map( (friend, index) => {
-            return <Friend {...friend}/>
+            return <Friend handleRemove={handleRemove} key={index} {...friend}/>
         })}
-    </div> );
+    </div> 
+    </div>
+    );
 }
  
 export default FriendsList;
