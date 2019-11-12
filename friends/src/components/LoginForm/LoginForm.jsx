@@ -58,7 +58,7 @@ const LoginForm = () => {
         .then(res => {
             console.log(res)
             localStorage.setItem("token",res.data.payload);
-            history.push("/");
+            history.push("/friends");
         })
         .catch(err => console.log(err));
         
