@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import axios from "axios";
+import {useHistory} from "react-router-dom";
 
 
 const useStyles = makeStyles(theme => ({
@@ -39,6 +41,7 @@ const LoginForm = () => {
         username: "", 
         password: ""
     });
+    const history = useHistory();
     const classes = useStyles();
 
     const handleChanges = e => {
@@ -47,9 +50,17 @@ const LoginForm = () => {
             [e.target.name]: e.target.value,
         })
     }
+    
     const handleSubmit = e => {
         e.preventDefault();
         console.log("Credentials: ", credentials);
+        axios.post("http://localhost:5000/api/login", credentials)
+        .then(res => {
+            console.log(res)
+            localStorage.setItem("token",res.data.payload);
+            history.push("/");
+        })
+        .catch(err => console.log(err));
         
     }    
     return (  <div className={classes.formContainer}><form onSubmit={handleSubmit} className={classes.container} noValidate autoComplete="off">
